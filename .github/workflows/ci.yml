@@ -1,35 +1,36 @@
-name: MLOps CI Pipeline
+name: Python CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  build-and-train:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.9"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
 
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+    - name: Install dependencies
+      run: pip install -r requirements.txt
 
-      - name: Verify dataset exists
-        run: ls data
+    - name: Run training script
+      run: python src/train.py
 
-      - name: Run DVC pipeline
-        run: dvc repro
-
-      - name: Verify model artifact
-        run: ls models
+    - name: Verify DVC pipeline
+      run: |
+        pip install "dvc[all]==3.64.2"
+        dvc repro --quiet
