@@ -1,4 +1,4 @@
 [core]
     remote = myremote
 ['remote "myremote"']
-    url = ../dvcstore
+    url = s3://mybucket/mlops-assignment-2
