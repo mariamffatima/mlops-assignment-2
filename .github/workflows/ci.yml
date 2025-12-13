@@ -1,36 +1,42 @@
-name: Python CI
+name: CI
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
 
-    - name: Upgrade pip
-      run: python -m pip install --upgrade pip
+      # Upgrade pip
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+      # Install dependencies
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Run training script
-      run: python src/train.py
+      # Install DVC
+      - name: Install DVC
+        run: pip install dvc
 
-    - name: Verify DVC pipeline
-      run: |
-        pip install "dvc[all]==3.64.2"
-        dvc repro --quiet
+      # Pull data from DVC remote
+      - name: Pull DVC data
+        run: dvc pull
+
+      # Run the training script
+      - name: Run training
+        run: python src/train.py
