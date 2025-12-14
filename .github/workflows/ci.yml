@@ -25,11 +25,8 @@ jobs:
     - name: Run linting
       run: flake8 src --max-line-length=88
 
-    - name: Reproduce DVC pipeline
-      run: |
-        pip install "dvc[s3]"   # optional if you use S3 remote
-        dvc pull                # pull dataset from remote
-        dvc repro               # run the pipeline
+    - name: Run training
+      run: python src/train.py
 
     - name: Run tests
       run: pytest tests
