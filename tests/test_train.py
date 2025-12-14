@@ -1,5 +1,7 @@
+import sys
 import os
-import pandas as pd
+
+sys.path.append(os.path.abspath("src"))
 from src.train import load_data, train_model
 
 def test_data_loading():
