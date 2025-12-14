@@ -1,30 +1,20 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 import joblib
 import os
 
-os.makedirs("models", exist_ok=True)
+def load_data(path):
+    return pd.read_csv(path)
 
-# Load dataset
-data = pd.read_csv("data/dataset.csv")
-print("Columns:", data.columns.tolist())
+def train_model(df):
+    X = df.iloc[:, :-1]
+    y = df.iloc[:, -1]
+    model = LogisticRegression()
+    model.fit(X, y)
+    return model
 
-# Encode categorical columns
-le_location = LabelEncoder()
-le_category = LabelEncoder()
-
-data["location_enc"] = le_location.fit_transform(data["location"].astype(str))
-data["category_enc"] = le_category.fit_transform(data["category"].astype(str))
-
-# Features and target
-X = data[["location_enc", "category_enc", "year"]]
-y = pd.to_numeric(data["rank"], errors="coerce").fillna(0)
-
-# Train model
-model = LinearRegression()
-model.fit(X, y)
-
-# Save model
-joblib.dump(model, "models/model.pkl")
-print("Model saved successfully.")
+if __name__ == "__main__":
+    os.makedirs("models", exist_ok=True)
+    data = load_data("data/dataset.csv")
+    model = train_model(data)
+    joblib.dump(model, "models/model.pkl")
