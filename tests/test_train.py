@@ -2,7 +2,7 @@ import sys
 import os
 
 sys.path.append(os.path.abspath("src"))
-from src.train import load_data, train_model
+from train import load_data, train_model
 
 def test_data_loading():
     df = load_data("data/dataset.csv")
