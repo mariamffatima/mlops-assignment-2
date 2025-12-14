@@ -10,23 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ Checkout code
     - uses: actions/checkout@v4
 
+    # 2️⃣ Set up Python 3.9
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.9'
 
+    # 3️⃣ Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    # 4️⃣ Lint code
     - name: Run linting
       run: flake8 src --max-line-length=88
 
+    # 5️⃣ Run training
     - name: Run training
       run: python src/train.py
 
+    # 6️⃣ Run tests with PYTHONPATH
     - name: Run tests
-      run: pytest tests
+      run: |
+        export PYTHONPATH=.:$PYTHONPATH   # Linux runner
+        pytest tests
